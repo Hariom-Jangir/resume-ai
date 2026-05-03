@@ -42,7 +42,7 @@ export async function logout(){
     }
 }
 
-export async function getme(){
+export async function getMe(){
     try{
     const response = await api.get("/api/auth/get-me",{},
     )
