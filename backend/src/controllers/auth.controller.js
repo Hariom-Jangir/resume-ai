@@ -29,7 +29,11 @@ if(!username || !email || !password){
     });
   await newUser.save();
 const token= jwt.sign({id:newUser._id},process.env.JWT_SECRET,{expiresIn:'1d'});
-  res.cookie("token",token);
+res.cookie("token", token, {
+    httpOnly: true,
+    sameSite: 'lax',
+    maxAge: 24 * 60 * 60 * 1000  // 1 day
+});
     res.status(201).json({
         message:'User registered successfully',
         user:{
@@ -59,7 +63,11 @@ async function loginUsercontroller(req,res) {
         return res.status(400).json({message:'Invalid email or password'});
     }
     const token= jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:'1d'});
-    res.cookie("token",token);
+    res.cookie("token",token, {
+        httpOnly: true,
+        sameSite: 'lax',
+        maxAge: 24 * 60 * 60 * 1000  // 1 day
+    });
     res.status(200).json({
         message:'User logged in successfully',
         user:{ 
