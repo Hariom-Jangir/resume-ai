@@ -31,8 +31,9 @@ if(!username || !email || !password){
 const token= jwt.sign({id:newUser._id},process.env.JWT_SECRET,{expiresIn:'1d'});
 res.cookie("token", token, {
     httpOnly: true,
-    sameSite: 'lax',
-    maxAge: 24 * 60 * 60 * 1000  // 1 day
+    secure: false,
+    sameSite: "none",
+    maxAge: 24 * 60 * 60 * 1000
 });
     res.status(201).json({
         message:'User registered successfully',
@@ -65,7 +66,8 @@ async function loginUsercontroller(req,res) {
     const token= jwt.sign({id:user._id},process.env.JWT_SECRET,{expiresIn:'1d'});
     res.cookie("token",token, {
         httpOnly: true,
-        sameSite: 'lax',
+        secure: false,
+        sameSite: "none",
         maxAge: 24 * 60 * 60 * 1000  // 1 day
     });
     res.status(200).json({

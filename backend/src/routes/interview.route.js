@@ -9,6 +9,6 @@ const upload=require('../middleware/file.middleware');
  * @desc Generate an interview report based on the provided resume, self-description, and job description.
  * @access Private
  */
-interviewRouter.post('/', authMiddleware.authUser,upload.single("resume"), interviewController.generateInterviewReportController);
+interviewRouter.post('/', authMiddleware.authUser,upload.single("resume"), interviewController.generateInterViewReportController);
 
 module.exports=interviewRouter;

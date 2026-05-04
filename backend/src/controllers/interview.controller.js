@@ -1,35 +1,39 @@
-const pdfParse = require('pdf-parse');
-const generateInterviewReport = require('../services/ai.service');
+   const { PDFParse } = require('pdf-parse');
+
 const interviewReportModel = require('../models/interviewReport.model');
+const { generateInterviewReport } = require('../services/ai.service');
+async function generateInterViewReportController(req, res) {
+    try {
+        // ✅ PDFParse is a class, instantiate and call getText()
+        const parser = new PDFParse(Uint8Array.from(req.file.buffer));
+        const resumeContent = await parser.getText();
 
+        const { selfDescription, jobDescription } = req.body;
 
+        const interViewReportByAi = await generateInterviewReport({
+            resume: resumeContent.text,
+            selfDescription,
+            jobDescription
+        });
 
-async function generateInterviewReportController(req, res) {
-const resumeFile = req.file; // Access the uploaded resume file
-const resumeContent= await new pdfParse.PDFParse(Uint8Array.from(resumeFile.buffer)).gettext();
+        const interviewReport = await interviewReportModel.create({
+            user: req.userId,
+            resume: resumeContent.text,
+            selfDescription,
+            jobDescription,
+            ...interViewReportByAi
+        });
 
-const { selfDescription, jobDescription } = req.body;
+        res.status(201).json({
+            message: "Interview report generated successfully.",
+            interviewReport
+        });
 
-const interviewReportByAI = await generateInterviewReport({
-    resume : resumeContent.text,
-     selfDescription,
-      jobDescription});
-
-const interviewReport= await interviewReportModel.create({
-    user:req.user._id,
-   resume:resumeContent.text,   
-    selfDescription,
-     jobDescription,
-      ...interviewReportByAI
-})
-
-res.status(201).json({
-    message:"Interview report generated successfully",
-    interviewReport
-})
-
+    } catch (err) {
+        console.error("Controller error:", err);
+        res.status(500).json({ message: err.message });
+    }
 }
 
-module.exports={
-    generateInterviewReportController
-}
+module.exports = { generateInterViewReportController };
+
