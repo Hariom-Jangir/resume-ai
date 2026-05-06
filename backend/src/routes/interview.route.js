@@ -19,6 +19,20 @@ interviewRouter.post('/', authMiddleware.authUser,upload.single("resume"), inter
  */
 interviewRouter.get('/report/:interviewId', authMiddleware.authUser, interviewController.getInterviewReportByIdController);
  
+/**
+ * @route GET /api/interview/
+ * @desc Retrieve all interview reports for the logged-in user.
+ * @access Private
+ */
+interviewRouter.get('/', authMiddleware.authUser, interviewController.getAllInterviewReportsController);
+
+/**
+ * @route POST /api/interview/resume/pdf/:interviewReportId
+ * @desc Generate a resume PDF for a specific interview report.
+ * @access Private
+ */
+interviewRouter.post('/resume/pdf/:interviewReportId', authMiddleware.authUser, interviewController.generateResumePdfController);
+
 
 
 module.exports=interviewRouter;

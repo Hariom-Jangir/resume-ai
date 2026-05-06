@@ -3,6 +3,9 @@ import { useContext, useEffect } from "react"
 import { InterviewContext } from "../interview.context"
 import { useParams } from "react-router"
 
+const getApiErrorMessage = (error, fallbackMessage) => {
+    return error?.response?.data?.message || fallbackMessage
+}
 
 export const useInterview = () => {
 
@@ -20,14 +23,16 @@ export const useInterview = () => {
         let response = null
         try {
             response = await generateInterviewReport({ jobDescription, selfDescription, resumeFile })
-            setReport(response.interviewReport)
+            setReport(response?.interviewReport ?? null)
         } catch (error) {
-            console.log(error)
+            if (error?.response?.status !== 401) {
+                window.alert(getApiErrorMessage(error, "Failed to generate interview report. Please try again."))
+            }
         } finally {
             setLoading(false)
         }
 
-        return response.interviewReport
+        return response?.interviewReport ?? null
     }
 
     const getReportById = async (interviewId) => {
@@ -35,13 +40,15 @@ export const useInterview = () => {
         let response = null
         try {
             response = await getInterviewReportById(interviewId)
-            setReport(response.interviewReport)
+            setReport(response?.interviewReport ?? null)
         } catch (error) {
-            console.log(error)
+            if (error?.response?.status !== 401) {
+                window.alert(getApiErrorMessage(error, "Failed to load interview report."))
+            }
         } finally {
             setLoading(false)
         }
-        return response.interviewReport
+        return response?.interviewReport ?? null
     }
 
     const getReports = async () => {
@@ -49,14 +56,17 @@ export const useInterview = () => {
         let response = null
         try {
             response = await getAllInterviewReports()
-            setReports(response.interviewReports)
+            setReports(response?.interviewReports ?? [])
         } catch (error) {
-            console.log(error)
+            if (error?.response?.status !== 401) {
+                window.alert(getApiErrorMessage(error, "Failed to load interview reports."))
+            }
+            setReports([])
         } finally {
             setLoading(false)
         }
 
-        return response.interviewReports
+        return response?.interviewReports ?? []
     }
 
     const getResumePdf = async (interviewReportId) => {
@@ -70,9 +80,13 @@ export const useInterview = () => {
             link.setAttribute("download", `resume_${interviewReportId}.pdf`)
             document.body.appendChild(link)
             link.click()
+            window.URL.revokeObjectURL(url)
+            document.body.removeChild(link)
         }
         catch (error) {
-            console.log(error)
+            if (error?.response?.status !== 401) {
+                window.alert(getApiErrorMessage(error, "Failed to download resume PDF. Please try again."))
+            }
         } finally {
             setLoading(false)
         }

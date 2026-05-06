@@ -15,8 +15,12 @@ const Register = () => {
     
     const handleSubmit = async (e) => {
         e.preventDefault()
-        await handleRegister({username,email,password})
-        navigate("/")
+        const result = await handleRegister({ username, email, password })
+        if (result?.success) {
+            navigate("/")
+            return
+        }
+        window.alert(result?.message || "Registration failed. Please try again.")
     }
 
     if(loading){

@@ -3,19 +3,28 @@ import { useContext } from "react";
 import { AuthContext } from "../auth.context";
 import { login, register, logout } from "../services/auth.api";
 
+const getErrorMessage = (err, fallbackMessage) =>
+    err?.response?.data?.message || fallbackMessage;
+
 export const useAuth = () => {
     const context = useContext(AuthContext);
     if (!context) throw new Error("useAuth must be used within an AuthProvider");
 
-    const { user, setUser, loading, setLoading } = context;
+    const { user, setUser, loading, setLoading, isLoading } = context;
 
     const handleLogin = async ({ email, password }) => {
         setLoading(true);
         try {
             const data = await login({ email, password });
-            if (data && data.user) setUser(data.user);
+            if (data?.user) {
+                setUser(data.user);
+                return { success: true, message: data?.message || "Login successful." };
+            }
+            setUser(null);
+            return { success: false, message: "Login failed. Please try again." };
         } catch (err) {
-            console.error("Login failed:", err);
+            setUser(null);
+            return { success: false, message: getErrorMessage(err, "Login failed. Please try again.") };
         } finally {
             setLoading(false);
         }
@@ -25,9 +34,15 @@ export const useAuth = () => {
         setLoading(true);
         try {
             const data = await register({ username, email, password });
-            if (data && data.user) setUser(data.user);
+            if (data?.user) {
+                setUser(data.user);
+                return { success: true, message: data?.message || "Registration successful." };
+            }
+            setUser(null);
+            return { success: false, message: "Registration failed. Please try again." };
         } catch (err) {
-            console.error("Registration failed:", err);
+            setUser(null);
+            return { success: false, message: getErrorMessage(err, "Registration failed. Please try again.") };
         } finally {
             setLoading(false);
         }
@@ -38,8 +53,10 @@ export const useAuth = () => {
         try {
             await logout();
             setUser(null);
+            return { success: true, message: "Logged out successfully." };
         } catch (err) {
-            console.error("Logout failed:", err);
+            setUser(null);
+            return { success: false, message: getErrorMessage(err, "Logout failed. Please try again.") };
         } finally {
             setLoading(false);
         }
@@ -47,5 +64,5 @@ export const useAuth = () => {
 
     // ✅ No useEffect here anymore
 
-    return { user, loading, handleRegister, handleLogin, handleLogout };
+    return { user, loading, isLoading, handleRegister, handleLogin, handleLogout };
 };

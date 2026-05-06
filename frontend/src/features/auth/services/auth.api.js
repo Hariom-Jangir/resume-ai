@@ -1,9 +1,4 @@
-import axios from 'axios';
-
-const api = axios.create({
-    baseURL: "http://localhost:3000",
-    withCredentials: true
-})
+import { api } from "../../../shared/apiClient";
 
 export async function register({ username, email, password }) {
     const response = await api.post("/api/auth/register", { username, email, password })
@@ -24,3 +19,4 @@ export async function getMe() {
     const response = await api.get("/api/auth/get-me")
     return response.data  // ✅ throws on 401, caught by AuthContext
 }
+
