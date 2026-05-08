@@ -1,8 +1,8 @@
-# GOAT - AI Interview Preparation Platform
+# PrepAI- AI Interview Preparation Platform
 
 ## Project Overview
 
-GOAT is a full-stack web application that helps users prepare for interviews by generating personalized interview reports and downloadable resume PDFs using AI.
+PrepAI is a full-stack web application that helps users prepare for interviews by generating personalized interview reports and downloadable resume PDFs using AI.
 
 Users can register, log in with cookie-based authentication, generate interview strategies from a resume/job description, view past interview reports, and download AI-generated resume PDFs.
 
