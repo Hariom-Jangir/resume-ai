@@ -322,26 +322,4 @@ This project uses **cookie-based JWT auth**:
 
 ---
 
-## Known Issues & Future Improvements
-
-1. **Dependency typo in frontend**  
-   Replace `"saas"` with `"sass"` in `frontend/package.json` if unintended.
-
-2. **Centralized toast/notification UX**  
-   Replace `window.alert(...)` with a proper toast system for better UX.
-
-3. **Validation hardening**  
-   Add schema validation middleware (e.g., Zod) for all route payloads.
-
-4. **Testing coverage**  
-   Add unit/integration tests for auth middleware, controllers, and critical frontend hooks.
-
-5. **Security/production hardening**  
-   Add environment-aware cookie options (`secure: true` in HTTPS production), rate-limiting, and helmet.
-
----
-
-## License
-
-This project is licensed under the **MIT License**.
 
