@@ -17,6 +17,9 @@ app.use(express.json());
 const authRouter = require('./routes/auth.route');
 const interviewRouter = require('./routes/interview.route');
 
+app.get('/', (req, res) => {
+    res.json({ status: 'PrepAI Backend is running ✅' });
+  });
 
 app.use('/api/auth',authRouter);
 app.use('/api/interview',interviewRouter);
