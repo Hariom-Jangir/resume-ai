@@ -12,18 +12,12 @@ export const AuthProvider = ({ children }) => {
 
     // ✅ Runs only ONCE when app starts
     useEffect(() => {
-        setUnauthorizedHandler((error) => {
+        setUnauthorizedHandler(() => {
             if (isHandlingUnauthorizedRef.current) return;
             isHandlingUnauthorizedRef.current = true;
             setUser(null);
             setLoading(false);
             setIsLoading(false);
-            const message = error?.response?.data?.message || "Session expired, please login again";
-            const isLoginPath = window.location.pathname === "/login";
-            const shouldNotify = message.toLowerCase().includes("expired") || !isLoginPath;
-            if (shouldNotify) {
-                window.alert(message);
-            }
             if (window.location.pathname !== "/login") {
                 window.location.href = "/login";
             }
