@@ -50,7 +50,7 @@ const Register = () => {
                         <label htmlFor="password">Password</label>
                         <input
                             onChange={(e) => { setPassword(e.target.value) }}
-                            type="password" id="password" name='password' placeholder='Enter password' />
+                            type="password" id="password" name='password' autoComplete="current-password" placeholder='Enter password' />
                     </div>
 
                     <button className='button primary-button' >Register</button>

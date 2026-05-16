@@ -3,6 +3,16 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const tokenBlacklistmodel = require('../models/blacklist.model');
 
+const AUTH_COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
+const isProduction = process.env.NODE_ENV === 'production';
+
+const authCookieOptions = {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? 'none' : 'lax',
+    maxAge: AUTH_COOKIE_MAX_AGE,
+};
+
 /**
  * @name registerUsercontroller
  * @description Controller to handle user registration
@@ -32,21 +42,8 @@ async function registerUsercontroller(req, res) {
         });
 
         await newUser.save();
-        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-       /* res.cookie("token", token, {
-            httpOnly: true,
-            secure: false,
-            sameSite: "lax",
-            maxAge: 24 * 60 * 60 * 1000
-        });
-*/
-
-res.cookie('token', token, {
-  httpOnly: true,
-  sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-  secure: process.env.NODE_ENV === 'production' ? true : false,
-  maxAge: 24 * 60 * 60 * 1000
-});
+        const token = jwt.sign({ id: newUser._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+        res.cookie('token', token, authCookieOptions);
 
 
         return res.status(201).json({
@@ -85,13 +82,8 @@ async function loginUsercontroller(req, res) {
             return res.status(400).json({ message: 'Invalid email or password' });
         }
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: false,
-            sameSite: "lax",
-            maxAge: 24 * 60 * 60 * 1000
-        });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+        res.cookie('token', token, authCookieOptions);
 
         return res.status(200).json({
             message: 'User logged in successfully',
@@ -118,11 +110,7 @@ async function logoutUsercontroller(req, res) {
             await tokenBlacklistmodel.create({ token });
         }
 
-        res.clearCookie("token", {
-            httpOnly: true,
-            secure: false,
-            sameSite: "lax"
-        });
+        res.clearCookie('token', authCookieOptions);
 
         return res.status(200).json({ message: 'User logged out successfully' });
     } catch (error) {
