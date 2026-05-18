@@ -1,91 +1,130 @@
-// ── Variables ────────────────────────────────────────────────────────────────
 @use 'sass:color';
-$bg-page:        #0d1117;
-$bg-card:        #161b22;
-$bg-panel:       #1c2230;
-$bg-input:       #1e2535;
-$border-color:   #2a3348;
-$text-primary:   #e6edf3;
-$text-muted:     #7d8590;
-$accent:         #ff2d78;
-$accent-alt:     #ff6b9d;
-$badge-required: #ff2d78;
-$badge-best:     #ff2d78;
-$info-bg:        #1b2a4a;
-$info-border:    #2d4a7a;
-$font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+@use '../../../style/variables' as *;
 
-// ── Page Shell ───────────────────────────────────────────────────────────────
+$bg-page: $bg-surface;
+$bg-card-local: $bg-card;
+$bg-input-local: $bg-input;
+$border-color: $border-default;
+$text-primary-local: $text-primary;
+$text-muted-local: $text-muted;
+$accent-local: $accent;
+$badge-required: $accent;
+$badge-best: $accent;
+$info-bg: #1b2a4a;
+$info-border: #2d4a7a;
+
 .home-page {
     width: 100%;
     max-width: 100%;
-    min-height: 100vh;
+    min-width: 0;
+    min-height: calc(100vh - #{$navbar-height});
+    min-height: calc(100dvh - #{$navbar-height});
     background-color: $bg-page;
-    color: $text-primary;
-    font-family: $font-stack;
-
+    color: $text-primary-local;
+    font-family: $font-sans;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    padding: 0;
-    gap: 0;
+    padding: clamp(1.25rem, 4vw, 3rem) clamp(1rem, 4vw, 2rem);
+    gap: clamp(1.5rem, 4vw, 2.5rem);
+    box-sizing: border-box;
 }
 
-// ── Page Header ──────────────────────────────────────────────────────────────
 .page-header {
-    text-align: center;
     width: 100%;
-    max-width: 56rem;
+    max-width: $container-lg;
+    text-align: center;
+    padding-inline: 0.25rem;
 
     h1 {
         font-weight: 700;
-        margin-bottom: 0.5rem;
-        color: $text-primary;
+        font-size: clamp(1.25rem, 4vw + 0.5rem, 2.25rem);
         line-height: 1.2;
+        margin-bottom: 0.5rem;
+        color: $text-primary-local;
     }
 
     p {
-        color: $text-muted;
-        max-width: 480px;
+        color: $text-muted-local;
+        font-size: clamp(0.875rem, 2vw, 1.0625rem);
+        max-width: 30rem;
         margin: 0 auto;
         line-height: 1.6;
     }
 
     .highlight {
-        color: $accent;
+        color: $accent-local;
     }
 }
 
-// ── Main Card ─────────────────────────────────────────────────────────────────
 .interview-card {
     width: 100%;
-    max-width: 900px;
-    background-color: $bg-card;
+    max-width: min(56.25rem, 100%);
+    background-color: $bg-card-local;
     border: 1px solid $border-color;
     border-radius: 1rem;
     overflow: hidden;
+    box-sizing: border-box;
 
     &__body {
+        display: flex;
+        flex-direction: column;
         min-width: 0;
+        min-height: min(24rem, 60vh);
+
+        @media (min-width: $bp-xl) {
+            flex-direction: row;
+            min-height: 32.5rem;
+        }
     }
 
     &__footer {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        padding: clamp(1rem, 3vw, 1.25rem) clamp(1rem, 3vw, 1.5rem);
         border-top: 1px solid $border-color;
 
+        @media (min-width: $bp-sm) {
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+        }
+
         .footer-info {
-            font-size: 0.8rem;
-            color: $text-muted;
+            font-size: clamp(0.75rem, 2vw, 0.8125rem);
+            color: $text-muted-local;
+            text-align: center;
+
+            @media (min-width: $bp-sm) {
+                text-align: left;
+            }
         }
     }
 }
 
-// ── Panels ────────────────────────────────────────────────────────────────────
 .panel-divider {
+    display: none;
     width: 1px;
-    min-height: 1px;
+    align-self: stretch;
     background-color: $border-color;
     flex-shrink: 0;
+
+    @media (min-width: $bp-xl) {
+        display: block;
+    }
+}
+
+.panel-mobile-divider {
+    width: 100%;
+    height: 1px;
+    background-color: $border-color;
+    flex-shrink: 0;
+
+    @media (min-width: $bp-xl) {
+        display: none;
+    }
 }
 
 .panel {
@@ -94,65 +133,78 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    padding: clamp(1rem, 3vw, 1.5rem);
 
     &__header {
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
         gap: 0.5rem;
-        margin-bottom: 0.25rem;
+        min-width: 0;
 
         h2 {
-            font-size: 1rem;
+            flex: 1 1 auto;
+            min-width: 0;
+            font-size: clamp(0.875rem, 2vw, 1rem);
             font-weight: 600;
-            color: $text-primary;
-            flex: 1;
+            color: $text-primary-local;
         }
     }
 
     &__icon {
         display: flex;
         align-items: center;
-        color: $accent;
+        flex-shrink: 0;
+        color: $accent-local;
     }
 
     &__textarea {
         flex: 1;
         width: 100%;
-        background-color: $bg-input;
+        max-width: 100%;
+        min-width: 0;
+        min-height: 10rem;
+        background-color: $bg-input-local;
         border: 1px solid $border-color;
         border-radius: 0.5rem;
         padding: 0.75rem 1rem;
-        color: $text-primary;
-        font-family: $font-stack;
-        font-size: 0.875rem;
-        resize: none;
+        color: $text-primary-local;
+        font-family: $font-sans;
+        font-size: clamp(0.8125rem, 2vw, 0.875rem);
+        resize: vertical;
         outline: none;
         transition: border-color 0.2s;
         line-height: 1.5;
+        box-sizing: border-box;
+
+        @media (min-width: $bp-xl) {
+            min-height: 0;
+            resize: none;
+        }
 
         &::placeholder {
-            color: $text-muted;
+            color: $text-muted-local;
         }
 
         &:focus {
-            border-color: $accent;
+            border-color: $accent-local;
         }
 
         &--short {
             flex: unset;
-            height: 96px;
+            min-height: 6rem;
+            resize: vertical;
         }
     }
 
     &--left {
         position: relative;
-        min-width: 0;
 
         .char-counter {
             margin-top: 0.25rem;
             text-align: right;
             font-size: 0.75rem;
-            color: $text-muted;
+            color: $text-muted-local;
         }
     }
 
@@ -161,7 +213,6 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
     }
 }
 
-// ── Badges ────────────────────────────────────────────────────────────────────
 .badge {
     font-size: 0.7rem;
     font-weight: 600;
@@ -169,6 +220,7 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
     border-radius: 0.3rem;
     text-transform: uppercase;
     letter-spacing: 0.03em;
+    flex-shrink: 0;
 
     &--required {
         background-color: rgba($badge-required, 0.15);
@@ -183,22 +235,22 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
     }
 }
 
-// ── Section Label ─────────────────────────────────────────────────────────────
 .section-label {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 0.5rem;
-    font-size: 0.875rem;
+    font-size: clamp(0.8125rem, 2vw, 0.875rem);
     font-weight: 500;
-    color: $text-primary;
+    color: $text-primary-local;
     margin-bottom: 0.25rem;
 }
 
-// ── Dropzone ──────────────────────────────────────────────────────────────────
 .upload-section {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    min-width: 0;
 }
 
 .dropzone {
@@ -207,66 +259,72 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
     align-items: center;
     justify-content: center;
     gap: 0.35rem;
-    padding: 1.5rem 1rem;
-    background-color: $bg-input;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: clamp(1rem, 3vw, 1.5rem) 1rem;
+    background-color: $bg-input-local;
     border: 2px dashed $border-color;
     border-radius: 0.6rem;
     cursor: pointer;
     transition: border-color 0.2s, background-color 0.2s;
+    box-sizing: border-box;
 
     &:hover {
-        border-color: $accent;
-        background-color: rgba($accent, 0.05);
+        border-color: $accent-local;
+        background-color: rgba($accent-local, 0.05);
     }
 
     &__icon {
-        color: $accent;
+        color: $accent-local;
         margin-bottom: 0.25rem;
     }
 
     &__title {
-        font-size: 0.875rem;
+        font-size: clamp(0.8125rem, 2vw, 0.875rem);
         font-weight: 500;
-        color: $text-primary;
+        color: $text-primary-local;
         margin: 0;
+        text-align: center;
     }
 
     &__subtitle {
         font-size: 0.75rem;
-        color: $text-muted;
+        color: $text-muted-local;
         margin: 0;
+        text-align: center;
     }
 }
 
-// ── OR Divider ────────────────────────────────────────────────────────────────
 .or-divider {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    color: $text-muted;
+    color: $text-muted-local;
     font-size: 0.75rem;
+    min-width: 0;
 
     &::before,
     &::after {
         content: '';
         flex: 1;
+        min-width: 0;
         height: 1px;
         background-color: $border-color;
     }
 
     span {
-        white-space: nowrap;
+        flex-shrink: 0;
     }
 }
 
-// ── Self Description ──────────────────────────────────────────────────────────
 .self-description {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    min-width: 0;
 }
 
-// ── Info Box ──────────────────────────────────────────────────────────────────
 .info-box {
     display: flex;
     align-items: flex-start;
@@ -275,6 +333,7 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
     background-color: $info-bg;
     border: 1px solid $info-border;
     border-radius: 0.5rem;
+    min-width: 0;
 
     &__icon {
         flex-shrink: 0;
@@ -284,31 +343,39 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
 
     p {
         margin: 0;
-        font-size: 0.8rem;
+        font-size: clamp(0.75rem, 2vw, 0.8125rem);
         color: #8ab4f8;
         line-height: 1.5;
+        overflow-wrap: anywhere;
 
         strong {
-            color: $text-primary;
+            color: $text-primary-local;
         }
     }
 }
 
-// ── Generate Button ───────────────────────────────────────────────────────────
 .generate-btn {
-    display: flex;
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
+    width: 100%;
     padding: 0.75rem 1.5rem;
-    background: linear-gradient(135deg, $accent 0%, color.adjust($accent, $lightness: -10%) 100%);
+    background: linear-gradient(135deg, $accent-local 0%, color.adjust($accent-local, $lightness: -10%) 100%);
     color: #fff;
-    font-size: 0.9rem;
+    font-size: clamp(0.875rem, 2vw, 0.9rem);
     font-weight: 600;
     border: none;
     border-radius: 0.5rem;
     cursor: pointer;
     transition: opacity 0.2s, transform 0.1s;
-    font-family: $font-stack;
+    font-family: $font-sans;
+    box-sizing: border-box;
+
+    @media (min-width: $bp-sm) {
+        width: auto;
+        flex-shrink: 0;
+    }
 
     &:hover {
         opacity: 0.9;
@@ -319,57 +386,91 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
     }
 }
 
-.recent-reports{
+.recent-reports {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
     width: 100%;
-    max-width: 900px;
+    max-width: min(56.25rem, 100%);
+    min-width: 0;
 
-    .reports-list{
+    h2 {
+        font-size: clamp(1.0625rem, 2.5vw, 1.25rem);
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+
+    .reports-list {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
         width: 100%;
         min-width: 0;
+        list-style: none;
+        padding: 0;
+        margin: 0;
 
-        .report-item{
-            background-color: $bg-card;
-            border: 1px solid $border-color;
-            border-radius: 0.5rem;
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            cursor: pointer;
-            min-width: 0;
-            overflow-wrap: anywhere;
+        @media (min-width: $bp-md) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
 
-            h3 {
-                font-size: clamp(0.95rem, 2.5vw, 1.1rem);
-            }
+        @media (min-width: $bp-xl) {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
 
-            .match-score {
-                font-size: 0.8rem;
-                font-weight: 600;
-                color: $accent;
-                align-items: flex-start;
-            }
+    .report-item {
+        background-color: $bg-card-local;
+        border: 1px solid $border-color;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        cursor: pointer;
+        min-width: 0;
+        overflow-wrap: anywhere;
+        transition: border-color 0.2s;
+
+        &:hover {
+            border-color: color.scale($border-color, $lightness: 12%);
+        }
+
+        h3 {
+            font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+            font-weight: 600;
+        }
+
+        .report-meta {
+            font-size: 0.8125rem;
+            color: $text-muted-local;
+        }
+
+        .match-score {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: $accent-local;
         }
     }
 }
 
-
-// ── Page Footer ───────────────────────────────────────────────────────────────
 .page-footer {
     display: flex;
-    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem 1.5rem;
+    width: 100%;
+    max-width: $container-lg;
+    padding: 0 0.5rem 2rem;
 
     a {
         font-size: 0.8rem;
-        color: $text-muted;
+        color: $text-muted-local;
         text-decoration: none;
         transition: color 0.2s;
 
         &:hover {
-            color: $text-primary;
+            color: $text-primary-local;
         }
     }
 }

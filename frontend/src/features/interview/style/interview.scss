@@ -1,78 +1,146 @@
-// ── Shared Variables (mirrors home.scss theme) ────────────────────────────────
 @use 'sass:color';
-$bg-page: #0d1117;
-$bg-card: #161b22;
-$bg-panel: #1c2230;
-$bg-input: #1e2535;
-$border-color: #2a3348;
-$text-primary: #e6edf3;
-$text-muted: #7d8590;
-$accent: #ff2d78;
-$font-stack: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+@use '../../../style/variables' as *;
 
-// severity palette
+$bg-page: $bg-surface;
+$bg-card-local: $bg-card;
+$bg-panel: $bg-elevated;
+$bg-input-local: $bg-input;
+$border-color: $border-default;
+$text-primary-local: $text-primary;
+$text-muted-local: $text-muted;
+$accent-local: $accent;
+
 $severity-high: #ff4d4d;
 $severity-medium: #f5a623;
 $severity-low: #3fb950;
 
-*::-webkit-scrollbar {
-    display: none;
-}
-
-// ── Page Shell ────────────────────────────────────────────────────────────────
 .interview-page {
     width: 100%;
     max-width: 100%;
-    min-height: 100vh;
+    min-width: 0;
+    min-height: calc(100vh - #{$navbar-height});
+    min-height: calc(100dvh - #{$navbar-height});
     background-color: $bg-page;
-    color: $text-primary;
-    font-family: $font-stack;
-    display: flex;
-    align-items: stretch;
+    color: $text-primary-local;
+    font-family: $font-sans;
     box-sizing: border-box;
+    padding: clamp(1rem, 3vw, 2rem) clamp(0.75rem, 3vw, 1.5rem);
 }
 
-// ── 3-Column Layout ───────────────────────────────────────────────────────────
 .interview-layout {
     display: flex;
+    flex-direction: column;
     width: 100%;
-    max-width: 1280px;
-    margin: 0 auto;
-    background-color: $bg-card;
+    max-width: $container-2xl;
+    margin-inline: auto;
+    min-width: 0;
+    background-color: $bg-card-local;
     border: 1px solid $border-color;
     border-radius: 1rem;
-    min-width: 0;
+    overflow: hidden;
+    box-sizing: border-box;
+
+    @media (min-width: $bp-xl) {
+        flex-direction: row;
+        align-items: stretch;
+    }
 }
 
 .interview-divider {
+    display: none;
     width: 1px;
     background-color: $border-color;
     flex-shrink: 0;
     align-self: stretch;
+
+    @media (min-width: $bp-xl) {
+        display: block;
+    }
 }
 
-// ── Left Nav ─────────────────────────────────────────────────────────────────
-.interview-nav {
-    width: 220px;
-    flex-shrink: 0;
-    padding: 1.25rem 0.75rem;
+// Mobile / tablet section picker
+.interview-mobile-bar {
+    display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: 0.25rem;
+    gap: 0.75rem;
+    width: 100%;
+    min-width: 0;
+    padding: clamp(0.75rem, 2vw, 1rem);
+    border-bottom: 1px solid $border-color;
+    box-sizing: border-box;
 
-    @media (min-width: 1280px) {
-        padding: 1.75rem 1rem;
+    @media (min-width: $bp-xl) {
+        display: none;
     }
 
+    .interview-nav__label {
+        margin-bottom: 0;
+        padding-inline: 0.25rem;
+    }
+}
 
+.interview-mobile-nav {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    width: 100%;
+    min-width: 0;
 
+    @media (min-width: $bp-sm) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+.nav-label--full {
+    display: none;
+
+    @media (min-width: $bp-sm) {
+        display: inline;
+    }
+}
+
+.nav-label--short {
+    @media (min-width: $bp-sm) {
+        display: none;
+    }
+}
+
+.btn-icon {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+    margin-right: 0.5rem;
+}
+
+.interview-nav {
+    display: none;
+    width: 100%;
+    max-width: 13.75rem;
+    flex-shrink: 0;
+    flex-direction: column;
+    padding: clamp(1rem, 2vw, 1.75rem) clamp(0.75rem, 2vw, 1rem);
+    box-sizing: border-box;
+
+    @media (min-width: $bp-xl) {
+        display: flex;
+        width: 13.75rem;
+    }
+
+    .nav-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 1rem;
+        min-height: 17.5rem;
+        width: 100%;
+    }
 
     &__label {
         font-size: 0.7rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: $text-muted;
+        color: $text-muted-local;
         padding: 0 0.75rem;
         margin-bottom: 0.5rem;
     }
@@ -82,28 +150,30 @@ $severity-low: #3fb950;
         align-items: center;
         gap: 0.6rem;
         width: 100%;
+        min-width: 0;
         padding: 0.65rem 0.75rem;
         background: none;
         border: none;
         border-radius: 0.5rem;
-        color: $text-muted;
-        font-family: $font-stack;
-        font-size: 0.875rem;
+        color: $text-muted-local;
+        font-family: $font-sans;
+        font-size: clamp(0.8125rem, 2vw, 0.875rem);
         cursor: pointer;
         text-align: left;
         transition: background-color 0.15s, color 0.15s;
+        box-sizing: border-box;
 
         &:hover {
             background-color: $bg-panel;
-            color: $text-primary;
+            color: $text-primary-local;
         }
 
         &--active {
-            background-color: rgba($accent, 0.1);
-            color: $accent;
+            background-color: rgba($accent-local, 0.1);
+            color: $accent-local;
 
             .interview-nav__icon svg {
-                stroke: $accent;
+                stroke: $accent-local;
             }
         }
     }
@@ -115,61 +185,48 @@ $severity-low: #3fb950;
     }
 }
 
-// ── Center Content ────────────────────────────────────────────────────────────
 .interview-content {
-    flex: 1;
+    flex: 1 1 auto;
     min-width: 0;
     min-height: 0;
-    padding: 1rem;
-    overflow-y: visible;
-    padding-bottom: 2rem;
+    padding: clamp(1rem, 3vw, 1.75rem) clamp(1rem, 3vw, 2rem);
+    box-sizing: border-box;
 
-    @media (min-width: 768px) {
-        padding: 1.25rem 1.5rem;
-    }
-
-    @media (min-width: 1280px) {
-        padding: 1.75rem 2rem;
+    @media (min-width: $bp-xl) {
         overflow-y: auto;
-        max-height: calc(100vh - 5.5rem);
-        padding-bottom: 5rem;
+        max-height: calc(100dvh - #{$navbar-height} - 2rem);
+        padding-bottom: 3rem;
     }
 
     section {
-        min-height: 100%;
         min-width: 0;
     }
 }
-
-
 
 .content-header {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
     gap: 0.5rem 0.75rem;
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
+    margin-bottom: clamp(1rem, 2vw, 1.5rem);
+    padding-bottom: clamp(0.75rem, 2vw, 1rem);
     border-bottom: 1px solid $border-color;
     min-width: 0;
 
-    @media (min-width: 768px) {
-        margin-bottom: 1.5rem;
-        padding-bottom: 1rem;
-    }
-
     h2 {
-        font-weight: 700;
-        color: $text-primary;
-        margin: 0;
-        min-width: 0;
         flex: 1 1 auto;
-        font-size: clamp(1rem, 2.8vw, 1.1rem);
+        min-width: 0;
+        margin: 0;
+        font-weight: 700;
+        font-size: clamp(1rem, 2.8vw, 1.25rem);
+        color: $text-primary-local;
+        line-height: 1.3;
     }
 
     &__count {
+        flex-shrink: 0;
         font-size: 0.8rem;
-        color: $text-muted;
+        color: $text-muted-local;
         background-color: $bg-panel;
         padding: 0.15rem 0.6rem;
         border-radius: 2rem;
@@ -177,7 +234,6 @@ $severity-low: #3fb950;
     }
 }
 
-// ── Question Cards ────────────────────────────────────────────────────────────
 .q-list {
     display: flex;
     flex-direction: column;
@@ -190,28 +246,31 @@ $severity-low: #3fb950;
     border: 1px solid $border-color;
     border-radius: 0.6rem;
     overflow: hidden;
+    min-width: 0;
+    max-width: 100%;
     transition: border-color 0.2s;
 
     &:hover {
-        border-color: color.scale($border-color, $lightness: 8%); 
+        border-color: color.scale($border-color, $lightness: 8%);
     }
 
     &__header {
         display: flex;
         align-items: flex-start;
         gap: 0.75rem;
-        padding: 0.9rem 1rem;
+        padding: clamp(0.75rem, 2vw, 0.9rem) clamp(0.75rem, 2vw, 1rem);
         cursor: pointer;
         user-select: none;
+        min-width: 0;
     }
 
     &__index {
         flex-shrink: 0;
         font-size: 0.7rem;
         font-weight: 700;
-        color: $accent;
-        background-color: rgba($accent, 0.1);
-        border: 1px solid rgba($accent, 0.2);
+        color: $accent-local;
+        background-color: rgba($accent-local, 0.1);
+        border: 1px solid rgba($accent-local, 0.2);
         border-radius: 0.3rem;
         padding: 0.15rem 0.4rem;
         margin-top: 2px;
@@ -223,30 +282,30 @@ $severity-low: #3fb950;
         margin: 0;
         font-size: clamp(0.8rem, 2.2vw, 0.9rem);
         font-weight: 500;
-        color: $text-primary;
+        color: $text-primary-local;
         line-height: 1.5;
         overflow-wrap: anywhere;
     }
 
     &__chevron {
         flex-shrink: 0;
-        color: $text-muted;
+        color: $text-muted-local;
         transition: transform 0.2s;
         margin-top: 2px;
 
         &--open {
             transform: rotate(180deg);
-            color: $accent;
+            color: $accent-local;
         }
     }
 
     &__body {
-        padding: 0 1rem 1rem;
+        padding: 0.75rem clamp(0.75rem, 2vw, 1rem) clamp(0.75rem, 2vw, 1rem);
         display: flex;
         flex-direction: column;
         gap: 0.75rem;
         border-top: 1px solid $border-color;
-        padding-top: 0.75rem;
+        min-width: 0;
     }
 
     &__section {
@@ -258,7 +317,7 @@ $severity-low: #3fb950;
         p {
             margin: 0;
             font-size: clamp(0.78rem, 2vw, 0.835rem);
-           color:color.scale($text-muted, $lightness: 15%);
+            color: color.scale($text-muted-local, $lightness: 15%);
             line-height: 1.6;
             overflow-wrap: anywhere;
         }
@@ -280,34 +339,33 @@ $severity-low: #3fb950;
         }
 
         &--answer {
-            color: #3fb950;
-            background-color: rgba(#3fb950, 0.1);
-            border: 1px solid rgba(#3fb950, 0.2);
+            color: $severity-low;
+            background-color: rgba($severity-low, 0.1);
+            border: 1px solid rgba($severity-low, 0.2);
         }
     }
 }
 
-// ── Road Map ──────────────────────────────────────────────────────────────────
 .roadmap-list {
     display: flex;
     flex-direction: column;
     gap: 0;
     position: relative;
     min-width: 0;
+    padding-left: 0.25rem;
 
-    // vertical timeline line
     &::before {
         content: '';
         position: absolute;
-        left: 18px;
+        left: 1.125rem;
         top: 0;
         bottom: 0;
         width: 2px;
-        background: linear-gradient(to bottom, $accent, rgba($accent, 0.1));
+        background: linear-gradient(to bottom, $accent-local, rgba($accent-local, 0.1));
         border-radius: 1px;
 
-        @media (min-width: 768px) {
-            left: 28px;
+        @media (min-width: $bp-md) {
+            left: 1.75rem;
         }
     }
 }
@@ -316,24 +374,23 @@ $severity-low: #3fb950;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    padding: 0.75rem 0 0.75rem 2.75rem;
+    padding: 0.75rem 0 0.75rem clamp(2.25rem, 6vw, 2.75rem);
     position: relative;
     min-width: 0;
 
-    // dot on timeline
     &::before {
         content: '';
         position: absolute;
-        left: 13px;
+        left: 0.8125rem;
         top: 1.05rem;
         width: 12px;
         height: 12px;
         border-radius: 50%;
-        background-color: $bg-card;
-        border: 2px solid $accent;
+        background-color: $bg-card-local;
+        border: 2px solid $accent-local;
 
-        @media (min-width: 768px) {
-            left: 21px;
+        @media (min-width: $bp-md) {
+            left: 1.3125rem;
             width: 14px;
             height: 14px;
         }
@@ -342,15 +399,18 @@ $severity-low: #3fb950;
     &__header {
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
         gap: 0.6rem;
+        min-width: 0;
     }
 
     &__badge {
+        flex-shrink: 0;
         font-size: 0.7rem;
         font-weight: 700;
-        color: $accent;
-        background-color: rgba($accent, 0.1);
-        border: 1px solid rgba($accent, 0.25);
+        color: $accent-local;
+        background-color: rgba($accent-local, 0.1);
+        border: 1px solid rgba($accent-local, 0.25);
         padding: 0.1rem 0.5rem;
         border-radius: 2rem;
     }
@@ -358,7 +418,7 @@ $severity-low: #3fb950;
     &__focus {
         margin: 0;
         font-weight: 600;
-        color: $text-primary;
+        color: $text-primary-local;
         min-width: 0;
         overflow-wrap: anywhere;
         font-size: clamp(0.85rem, 2.2vw, 0.95rem);
@@ -378,7 +438,7 @@ $severity-low: #3fb950;
             align-items: flex-start;
             gap: 0.5rem;
             font-size: clamp(0.78rem, 2vw, 0.845rem);
-          color: color.adjust($text-muted, $lightness: 12%);
+            color: color.adjust($text-muted-local, $lightness: 12%);
             line-height: 1.5;
             min-width: 0;
             overflow-wrap: anywhere;
@@ -390,60 +450,57 @@ $severity-low: #3fb950;
         width: 5px;
         height: 5px;
         border-radius: 50%;
-        background-color: $text-muted;
+        background-color: $text-muted-local;
         margin-top: 8px;
     }
 }
 
-// ── Right Sidebar ─────────────────────────────────────────────────────────────
 .interview-sidebar {
     width: 100%;
     max-width: 100%;
     flex-shrink: 0;
-    padding: 1rem 1rem 1.5rem;
+    padding: clamp(1rem, 3vw, 1.75rem) clamp(1rem, 3vw, 1.25rem);
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
     min-width: 0;
     border-top: 1px solid $border-color;
+    box-sizing: border-box;
 
-    @media (min-width: 768px) {
-        padding: 1.25rem 1.25rem 1.75rem;
-    }
-
-    @media (min-width: 1280px) {
-        width: 240px;
-        max-width: 240px;
+    @media (min-width: $bp-xl) {
+        width: 15rem;
+        max-width: 15rem;
         border-top: none;
-        padding: 1.75rem 1.25rem;
     }
 }
 
 .sidebar-divider {
     height: 1px;
     background-color: $border-color;
+    width: 100%;
 }
 
-// Match Score
 .match-score {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.6rem;
+    width: 100%;
+    min-width: 0;
 
     &__label {
         font-size: 0.75rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: $text-muted;
+        color: $text-muted-local;
         margin: 0;
         align-self: flex-start;
     }
 
     &__ring {
-        width: 90px;
-        height: 90px;
+        width: clamp(5rem, 18vw, 5.625rem);
+        height: clamp(5rem, 18vw, 5.625rem);
         border-radius: 50%;
         display: flex;
         flex-direction: column;
@@ -465,15 +522,15 @@ $severity-low: #3fb950;
     }
 
     &__value {
-        font-size: 1.6rem;
+        font-size: clamp(1.35rem, 4vw, 1.6rem);
         font-weight: 800;
-        color: $text-primary;
+        color: $text-primary-local;
         line-height: 1;
     }
 
     &__pct {
         font-size: 0.75rem;
-        color: $text-muted;
+        color: $text-muted-local;
         margin-top: -2px;
     }
 
@@ -485,7 +542,6 @@ $severity-low: #3fb950;
     }
 }
 
-// Skill Gaps
 .skill-gaps {
     display: flex;
     flex-direction: column;
@@ -498,7 +554,7 @@ $severity-low: #3fb950;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: $text-muted;
+        color: $text-muted-local;
         margin: 0;
     }
 
@@ -511,12 +567,14 @@ $severity-low: #3fb950;
 }
 
 .skill-tag {
-    font-size: 0.775rem;
+    font-size: clamp(0.7rem, 2vw, 0.775rem);
     font-weight: 500;
     padding: 0.3rem 0.7rem;
     border-radius: 0.4rem;
     border: 1px solid;
     cursor: default;
+    max-width: 100%;
+    overflow-wrap: anywhere;
 
     &--high {
         color: $severity-high;
@@ -535,4 +593,17 @@ $severity-low: #3fb950;
         background-color: rgba($severity-low, 0.1);
         border-color: rgba($severity-low, 0.25);
     }
+}
+
+.interview-mobile-bar .button {
+    width: 100%;
+
+    @media (min-width: $bp-md) {
+        width: auto;
+        align-self: flex-start;
+    }
+}
+
+.interview-nav .button {
+    width: 100%;
 }

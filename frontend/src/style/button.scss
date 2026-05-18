@@ -1,20 +1,56 @@
-.button{
+@use './variables' as *;
 
+.button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 2.75rem;
+    padding: 0.75rem 1.5rem;
     border: none;
     outline: none;
-    padding-inline: 1.5rem;
-    padding-block: 0.75rem;
-    border-radius: 1rem;
+    border-radius: 0.75rem;
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    font-weight: 600;
+    line-height: 1.25;
     cursor: pointer;
+    transition: background-color 0.2s, transform 0.15s, opacity 0.2s;
+    white-space: normal;
+    text-align: center;
 
-    transition: all 0.3s ease-in-out;
-
-    &.primary-button{
-        background-color: #e1034d;
-        color: white;
+    @media (min-width: $bp-md) {
+        width: auto;
+        min-width: 8rem;
     }
 
-    &:active{
-        transform: scale(0.9);
+    &.primary-button {
+        background-color: $accent-alt;
+        color: #fff;
+
+        &:hover {
+            opacity: 0.92;
+        }
+    }
+
+    &:active {
+        transform: scale(0.98);
+    }
+
+    &:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    &--block {
+        width: 100%;
+
+        @media (min-width: $bp-md) {
+            width: 100%;
+            min-width: 0;
+        }
     }
 }

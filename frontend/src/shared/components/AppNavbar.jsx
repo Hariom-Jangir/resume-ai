@@ -1,6 +1,21 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router'
 import { useAuth } from '../../features/auth/hooks/useAuth'
+import './AppNavbar.scss'
+
+const MenuIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        <line x1="4" x2="20" y1="12" y2="12" />
+        <line x1="4" x2="20" y1="6" y2="6" />
+        <line x1="4" x2="20" y1="18" y2="18" />
+    </svg>
+)
+
+const CloseIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+        <path d="M18 6L6 18M6 6l12 12" />
+    </svg>
+)
 
 export function AppNavbar() {
     const { user, handleLogout } = useAuth()
@@ -12,114 +27,134 @@ export function AppNavbar() {
         setMenuOpen(false)
     }, [ location.pathname ])
 
+    useEffect(() => {
+        if (!menuOpen) return undefined
+        const prev = document.body.style.overflow
+        document.body.style.overflow = 'hidden'
+        return () => {
+            document.body.style.overflow = prev
+        }
+    }, [ menuOpen ])
+
     const onLogout = async () => {
         setMenuOpen(false)
         await handleLogout()
         navigate('/login')
     }
 
-    const linkClass =
-        'rounded-lg px-3 py-2 text-sm text-[#7d8590] transition-colors hover:bg-[#1c2230] hover:text-[#e6edf3] md:inline-flex md:items-center md:px-3 md:py-2'
+    const isActive = (path) => location.pathname === path
 
-    const activeLink = (path) =>
-        location.pathname === path
-            ? ' bg-[rgba(255,45,120,0.12)] text-[#ff2d78]'
-            : ''
+    const navLinkClass = (path) =>
+        `app-navbar__link${isActive(path) ? ' app-navbar__link--active' : ''}`
+
+    const loginBtnClass = `app-navbar__btn app-navbar__btn--login${isActive('/login') ? ' app-navbar__btn--login--active' : ''}`
+    const registerBtnClass = `app-navbar__btn app-navbar__btn--register${isActive('/register') ? ' app-navbar__btn--register--active' : ''}`
 
     return (
-        <header className="sticky top-0 z-50 w-full max-w-full border-b border-[#2a3348] bg-[#161b22]/95 backdrop-blur-md">
-            <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3 sm:px-5 md:px-6 xl:px-8">
+        <header className={`app-navbar${menuOpen ? ' app-navbar--menu-open' : ''}`}>
+            <div className="app-navbar__inner">
                 <Link
                     to={user ? '/' : '/login'}
-                    className="shrink-0 text-lg font-bold tracking-tight text-[#e6edf3] sm:text-xl md:text-2xl"
+                    className="app-navbar__logo"
                     onClick={() => setMenuOpen(false)}
+                    aria-label="PrepAI home"
                 >
-                    Prep<span className="text-[#ff2d78]">AI</span>
+                    <span className="app-navbar__logo-text">
+                        Prep<span>AI</span>
+                    </span>
                 </Link>
 
-                {/* Desktop / tablet nav */}
-                <nav className="hidden items-center gap-1 md:flex md:gap-2" aria-label="Main">
+                <nav className="app-navbar__nav" aria-label="Main navigation">
+                    {user && (
+                        <Link to="/" className={navLinkClass('/')} onClick={() => setMenuOpen(false)}>
+                            Dashboard
+                        </Link>
+                    )}
+                </nav>
+
+                <div className="app-navbar__actions">
                     {user ? (
-                        <>
-                            <Link to="/" className={`${linkClass}${activeLink('/')}`}>
-                                Dashboard
-                            </Link>
-                            <button
-                                type="button"
-                                onClick={onLogout}
-                                className={`${linkClass} border-0 bg-transparent font-[inherit] cursor-pointer`}
-                            >
-                                Log out
-                            </button>
-                        </>
+                        <button
+                            type="button"
+                            onClick={onLogout}
+                            className="app-navbar__btn app-navbar__btn--ghost"
+                        >
+                            Log out
+                        </button>
                     ) : (
                         <>
-                            <Link to="/login" className={`${linkClass}${activeLink('/login')}`}>
+                            <Link to="/login" className={loginBtnClass}>
                                 Log in
                             </Link>
-                            <Link to="/register" className={`${linkClass}${activeLink('/register')}`}>
+                            <Link to="/register" className={registerBtnClass}>
                                 Register
                             </Link>
                         </>
                     )}
-                </nav>
+                </div>
 
-                {/* Mobile menu toggle */}
                 <button
                     type="button"
-                    className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[#2a3348] bg-[#1c2230] text-[#e6edf3] md:hidden"
+                    className="app-navbar__toggle"
                     aria-expanded={menuOpen}
-                    aria-controls="mobile-nav"
+                    aria-controls="app-navbar-mobile"
                     aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-                    onClick={() => setMenuOpen((o) => !o)}
+                    onClick={() => setMenuOpen((open) => !open)}
                 >
-                    {menuOpen ? (
-                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M18 6L6 18M6 6l12 12" />
-                        </svg>
-                    ) : (
-                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <line x1="4" x2="20" y1="12" y2="12" />
-                            <line x1="4" x2="20" y1="6" y2="6" />
-                            <line x1="4" x2="20" y1="18" y2="18" />
-                        </svg>
-                    )}
+                    {menuOpen ? <CloseIcon /> : <MenuIcon />}
                 </button>
             </div>
 
-            {/* Mobile menu panel */}
-            {menuOpen && (
-                <div
-                    id="mobile-nav"
-                    className="border-t border-[#2a3348] bg-[#161b22] px-4 py-3 md:hidden"
-                >
-                    <nav className="flex flex-col gap-1" aria-label="Mobile">
-                        {user ? (
-                            <>
-                                <Link to="/" className={`${linkClass} w-full${activeLink('/')}`}>
+            <div
+                id="app-navbar-mobile"
+                className={`app-navbar__mobile-wrap${menuOpen ? ' app-navbar__mobile-wrap--open' : ''}`}
+                aria-hidden={!menuOpen}
+            >
+                <div className="app-navbar__mobile-panel">
+                    <div className="app-navbar__mobile-inner">
+                        {user && (
+                            <nav className="app-navbar__mobile-nav" aria-label="Mobile navigation">
+                                <Link
+                                    to="/"
+                                    className={navLinkClass('/')}
+                                    onClick={() => setMenuOpen(false)}
+                                >
                                     Dashboard
                                 </Link>
+                            </nav>
+                        )}
+
+                        <div className="app-navbar__mobile-actions">
+                            {user ? (
                                 <button
                                     type="button"
                                     onClick={onLogout}
-                                    className={`${linkClass} w-full border-0 bg-transparent text-left font-[inherit] cursor-pointer`}
+                                    className="app-navbar__btn app-navbar__btn--ghost"
                                 >
                                     Log out
                                 </button>
-                            </>
-                        ) : (
-                            <>
-                                <Link to="/login" className={`${linkClass} w-full${activeLink('/login')}`}>
-                                    Log in
-                                </Link>
-                                <Link to="/register" className={`${linkClass} w-full${activeLink('/register')}`}>
-                                    Register
-                                </Link>
-                            </>
-                        )}
-                    </nav>
+                            ) : (
+                                <>
+                                    <Link
+                                        to="/login"
+                                        className={loginBtnClass}
+                                        onClick={() => setMenuOpen(false)}
+                                    >
+                                        Log in
+                                    </Link>
+                                    <Link
+                                        to="/register"
+                                        className={registerBtnClass}
+                                        onClick={() => setMenuOpen(false)}
+                                    >
+                                        Register
+                                    </Link>
+                                </>
+                            )}
+                        </div>
+                    </div>
                 </div>
-            )}
+            </div>
         </header>
     )
 }
