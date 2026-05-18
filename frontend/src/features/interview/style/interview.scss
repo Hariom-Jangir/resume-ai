@@ -22,13 +22,13 @@ $severity-low: #3fb950;
 // ── Page Shell ────────────────────────────────────────────────────────────────
 .interview-page {
     width: 100%;
+    max-width: 100%;
     min-height: 100vh;
     background-color: $bg-page;
     color: $text-primary;
     font-family: $font-stack;
     display: flex;
     align-items: stretch;
-    padding: 1.5rem;
     box-sizing: border-box;
 }
 
@@ -41,24 +41,28 @@ $severity-low: #3fb950;
     background-color: $bg-card;
     border: 1px solid $border-color;
     border-radius: 1rem;
-    justify-content: space-between;
+    min-width: 0;
 }
 
 .interview-divider {
     width: 1px;
     background-color: $border-color;
     flex-shrink: 0;
+    align-self: stretch;
 }
 
 // ── Left Nav ─────────────────────────────────────────────────────────────────
 .interview-nav {
     width: 220px;
     flex-shrink: 0;
-    padding: 1.75rem 1rem;
-    display: flex;
+    padding: 1.25rem 0.75rem;
     flex-direction: column;
     justify-content: space-between;
     gap: 0.25rem;
+
+    @media (min-width: 1280px) {
+        padding: 1.75rem 1rem;
+    }
 
 
 
@@ -114,38 +118,53 @@ $severity-low: #3fb950;
 // ── Center Content ────────────────────────────────────────────────────────────
 .interview-content {
     flex: 1;
-    padding: 1.75rem 2rem;
-    overflow-y: auto;
-    min-height: initial;
-    max-height: calc(100vh - 3rem);
-    padding-bottom: 5rem;
-    align-items: flex-start;
+    min-width: 0;
+    min-height: 0;
+    padding: 1rem;
+    overflow-y: visible;
+    padding-bottom: 2rem;
 
+    @media (min-width: 768px) {
+        padding: 1.25rem 1.5rem;
+    }
 
-
-
-
-
-
+    @media (min-width: 1280px) {
+        padding: 1.75rem 2rem;
+        overflow-y: auto;
+        max-height: calc(100vh - 5.5rem);
+        padding-bottom: 5rem;
+    }
 
     section {
         min-height: 100%;
+        min-width: 0;
     }
 }
 
+
+
 .content-header {
     display: flex;
+    flex-wrap: wrap;
     align-items: baseline;
-    gap: 0.75rem;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1rem;
+    gap: 0.5rem 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
     border-bottom: 1px solid $border-color;
+    min-width: 0;
+
+    @media (min-width: 768px) {
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+    }
 
     h2 {
-        font-size: 1.1rem;
         font-weight: 700;
         color: $text-primary;
         margin: 0;
+        min-width: 0;
+        flex: 1 1 auto;
+        font-size: clamp(1rem, 2.8vw, 1.1rem);
     }
 
     &__count {
@@ -163,6 +182,7 @@ $severity-low: #3fb950;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    min-width: 0;
 }
 
 .q-card {
@@ -199,11 +219,13 @@ $severity-low: #3fb950;
 
     &__question {
         flex: 1;
+        min-width: 0;
         margin: 0;
-        font-size: 0.9rem;
+        font-size: clamp(0.8rem, 2.2vw, 0.9rem);
         font-weight: 500;
         color: $text-primary;
         line-height: 1.5;
+        overflow-wrap: anywhere;
     }
 
     &__chevron {
@@ -231,12 +253,14 @@ $severity-low: #3fb950;
         display: flex;
         flex-direction: column;
         gap: 0.4rem;
+        min-width: 0;
 
         p {
             margin: 0;
-            font-size: 0.835rem;
+            font-size: clamp(0.78rem, 2vw, 0.835rem);
            color:color.scale($text-muted, $lightness: 15%);
             line-height: 1.6;
+            overflow-wrap: anywhere;
         }
     }
 
@@ -269,17 +293,22 @@ $severity-low: #3fb950;
     flex-direction: column;
     gap: 0;
     position: relative;
+    min-width: 0;
 
     // vertical timeline line
     &::before {
         content: '';
         position: absolute;
-        left: 28px;
+        left: 18px;
         top: 0;
         bottom: 0;
         width: 2px;
         background: linear-gradient(to bottom, $accent, rgba($accent, 0.1));
         border-radius: 1px;
+
+        @media (min-width: 768px) {
+            left: 28px;
+        }
     }
 }
 
@@ -287,20 +316,27 @@ $severity-low: #3fb950;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    padding: 0.75rem 0 0.75rem 3.5rem;
+    padding: 0.75rem 0 0.75rem 2.75rem;
     position: relative;
+    min-width: 0;
 
     // dot on timeline
     &::before {
         content: '';
         position: absolute;
-        left: 21px;
+        left: 13px;
         top: 1.05rem;
-        width: 14px;
-        height: 14px;
+        width: 12px;
+        height: 12px;
         border-radius: 50%;
         background-color: $bg-card;
         border: 2px solid $accent;
+
+        @media (min-width: 768px) {
+            left: 21px;
+            width: 14px;
+            height: 14px;
+        }
     }
 
     &__header {
@@ -321,9 +357,11 @@ $severity-low: #3fb950;
 
     &__focus {
         margin: 0;
-        font-size: 0.95rem;
         font-weight: 600;
         color: $text-primary;
+        min-width: 0;
+        overflow-wrap: anywhere;
+        font-size: clamp(0.85rem, 2.2vw, 0.95rem);
     }
 
     &__tasks {
@@ -333,14 +371,17 @@ $severity-low: #3fb950;
         display: flex;
         flex-direction: column;
         gap: 0.35rem;
+        min-width: 0;
 
         li {
             display: flex;
             align-items: flex-start;
             gap: 0.5rem;
-            font-size: 0.845rem;
+            font-size: clamp(0.78rem, 2vw, 0.845rem);
           color: color.adjust($text-muted, $lightness: 12%);
             line-height: 1.5;
+            min-width: 0;
+            overflow-wrap: anywhere;
         }
     }
 
@@ -356,12 +397,26 @@ $severity-low: #3fb950;
 
 // ── Right Sidebar ─────────────────────────────────────────────────────────────
 .interview-sidebar {
-    width: 240px;
+    width: 100%;
+    max-width: 100%;
     flex-shrink: 0;
-    padding: 1.75rem 1.25rem;
+    padding: 1rem 1rem 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+    min-width: 0;
+    border-top: 1px solid $border-color;
+
+    @media (min-width: 768px) {
+        padding: 1.25rem 1.25rem 1.75rem;
+    }
+
+    @media (min-width: 1280px) {
+        width: 240px;
+        max-width: 240px;
+        border-top: none;
+        padding: 1.75rem 1.25rem;
+    }
 }
 
 .sidebar-divider {
@@ -435,6 +490,8 @@ $severity-low: #3fb950;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
+    min-width: 0;
+    width: 100%;
 
     &__label {
         font-size: 0.75rem;
@@ -449,6 +506,7 @@ $severity-low: #3fb950;
         display: flex;
         flex-wrap: wrap;
         gap: 0.5rem;
+        min-width: 0;
     }
 }
 
